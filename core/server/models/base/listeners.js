@@ -2,46 +2,7 @@ var moment = require('moment-timezone'),
     _ = require('lodash'),
     models = require('../../models'),
     common = require('../../lib/common'),
-    sequence = require('../../utils/sequence');
-
-/**
- * WHEN access token is created we will update last_seen for user.
- */
-common.events.on('token.added', function (tokenModel) {
-    models.User.edit({last_seen: moment().toDate()}, {id: tokenModel.get('user_id')})
-        .catch(function (err) {
-            common.logging.error(new common.errors.GhostError({err: err, level: 'critical'}));
-        });
-});
-
-/**
- * WHEN user get's suspended (status=inactive), we delete his tokens to ensure
- * he can't login anymore
- *
- * NOTE:
- *   - this event get's triggered either on user update (suspended) or if an **active** user get's deleted.
- *   - if an active user get's deleted, we have to access the previous attributes, because this is how bookshelf works
- *     if you delete a user.
- */
-common.events.on('user.deactivated', function (userModel, options) {
-    options = options || {};
-    options = _.merge({}, options, {id: userModel.id || userModel.previousAttributes().id});
-
-    if (options.importing) {
-        return;
-    }
-
-    models.Accesstoken.destroyByUser(options)
-        .then(function () {
-            return models.Refreshtoken.destroyByUser(options);
-        })
-        .catch(function (err) {
-            common.logging.error(new common.errors.GhostError({
-                err: err,
-                level: 'critical'
-            }));
-        });
-});
+    sequence = require('../../lib/promise/sequence');
 
 /**
  * WHEN timezone changes, we will:
@@ -53,7 +14,7 @@ common.events.on('settings.active_timezone.edited', function (settingModel, opti
     options = _.merge({}, options, {context: {internal: true}});
 
     var newTimezone = settingModel.attributes.value,
-        previousTimezone = settingModel._updatedAttributes.value,
+        previousTimezone = settingModel._previousAttributes.value,
         timezoneOffsetDiff = moment.tz(previousTimezone).utcOffset() - moment.tz(newTimezone).utcOffset();
 
     // CASE: TZ was updated, but did not change
@@ -118,5 +79,41 @@ common.events.on('settings.active_timezone.edited', function (settingModel, opti
                     level: 'critical'
                 }));
             });
+    });
+});
+
+/**
+ * Remove all notifications, which are seen, older than 3 months.
+ * No transaction, because notifications are not sensitive and we would have to add `forUpdate`
+ * to the settings model to create real lock.
+ */
+common.events.on('settings.notifications.edited', function (settingModel) {
+    var allNotifications = JSON.parse(settingModel.attributes.value || []),
+        options = {context: {internal: true}},
+        skip = true;
+
+    allNotifications = allNotifications.filter(function (notification) {
+        // Do not delete the release notification
+        if (Object.prototype.hasOwnProperty.call(notification, 'custom') && !notification.custom) {
+            return true;
+        }
+
+        if (notification.seen && moment().diff(moment(notification.addedAt), 'month') > 2) {
+            skip = false;
+            return false;
+        }
+
+        return true;
+    });
+
+    if (skip) {
+        return;
+    }
+
+    return models.Settings.edit({
+        key: 'notifications',
+        value: JSON.stringify(allNotifications)
+    }, options).catch(function (err) {
+        common.errors.logError(err);
     });
 });

@@ -2,7 +2,7 @@
 
 This is a plain English summary of all of the components within Ghost which may affect your privacy in some way. Please keep in mind that if you use third party Themes or Apps with Ghost, there may be additional things not listed here.
 
-Each of the items listed in this document can be disabled via Ghost's `config.[env].json` file. Check out the [configuration guide](https://docs.ghost.org/docs/config#section-privacy) for details.
+Each of the items listed in this document can be disabled via Ghost's `config.[env].json` file. Check out the [configuration guide](https://ghost.org/docs/concepts/config/#privacy) for details.
 
 ## Official Services
 
@@ -11,9 +11,11 @@ Some official services for Ghost are enabled by default. These services connect 
 
 ### Automatic Update Checks
 
-When a new session is started, Ghost pings a Ghost.org endpoint to check if the current version of Ghost is the latest version of Ghost. If an update is available, a notification appears inside Ghost to let you know. Ghost.org collects basic anonymised usage statistics from update check requests.
+When a new session is started, Ghost pings a Ghost.org service to check if the current version of Ghost is the latest version of Ghost. If an update is available, a notification on the About Page appears to let you know.
 
-This service can be disabled at any time. All of the information and code related to this service is available in the [update-check.js](https://github.com/TryGhost/Ghost/blob/master/core/server/update-check.js) file.
+Ghost will collect basic anonymised usage statistics from your blog before sending the request to the service. You can disable collecting statistics using the [privacy configuration](https://ghost.org/docs/concepts/config/). You will still receive notifications from the service.
+
+All of the information and code related to this service is available in the [update-check.js](https://github.com/TryGhost/Ghost/blob/master/core/server/update-check.js) file.
 
 
 ## Third Party Services
@@ -26,9 +28,8 @@ To automatically populate your profile picture, Ghost pings [Gravatar](http://gr
 
 ### RPC Pings
 
-When you publish a new post, Ghost sends out an RPC ping to let third party services know that new content is available on your blog. This enables search engines and other services to discover and index content on your blog more quickly. At present Ghost sends an RPC ping to the following services when you publish a new post:
+When you publish a new post, Ghost sends out an RPC ping to let third party services know that new content is available on your blog. This enables search engines and other services to discover and index content on your blog more quickly. At present Ghost sends an RPC ping to the following service when you publish a new post:
 
-- http://blogsearch.google.com
 - http://rpc.pingomatic.com
 
 RPC pings only happen when Ghost is running in the `production` environment.

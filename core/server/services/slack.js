@@ -1,10 +1,12 @@
-var https = require('https'),
-    url = require('url'),
-    common = require('../lib/common'),
-    urlService = require('../services/url'),
-    blogIconUtils = require('../utils/blog-icon'),
-    settingsCache = require('../settings/cache'),
+var common = require('../lib/common'),
+    request = require('../lib/request'),
+    imageLib = require('../lib/image'),
+    urlUtils = require('../lib/url-utils'),
+    urlService = require('../../frontend/services/url'),
+    settingsCache = require('./settings/cache'),
     schema = require('../data/schema').checks,
+    moment = require('moment'),
+
     defaultPostSlugs = [
         'welcome',
         'the-editor',
@@ -22,39 +24,37 @@ function getSlackSettings() {
     return setting ? setting[0] : {};
 }
 
-function makeRequest(reqOptions, reqPayload) {
-    var req = https.request(reqOptions);
-
-    reqPayload = JSON.stringify(reqPayload);
-
-    req.write(reqPayload);
-    req.on('error', function (err) {
-        common.logging.error(new common.errors.GhostError({
-            err: err,
-            context: common.i18n.t('errors.services.ping.requestFailed.error', {service: 'slack'}),
-            help: common.i18n.t('errors.services.ping.requestFailed.help', {url: 'http://docs.ghost.org'})
-        }));
-    });
-
-    req.end();
-}
-
 function ping(post) {
-    var message,
-        reqOptions,
+    let message,
+        title,
+        author,
+        description,
         slackData = {},
-        slackSettings = getSlackSettings();
+        slackSettings = getSlackSettings(),
+        blogTitle = settingsCache.get('title');
 
     // If this is a post, we want to send the link of the post
     if (schema.isPost(post)) {
-        message = urlService.utils.urlFor('post', {post: post}, true);
+        message = urlService.getUrlByResourceId(post.id, {absolute: true});
+        title = post.title ? post.title : null;
+        author = post.authors ? post.authors[0] : null;
+
+        if (post.custom_excerpt) {
+            description = post.custom_excerpt;
+        } else if (post.html) {
+            description = `${post.html.replace(/<[^>]+>/g, '').split('.').slice(0, 3).join('.')}.`;
+        } else {
+            description = null;
+        }
     } else {
         message = post.message;
     }
+
     // Quit here if slack integration is not activated
-    if (slackSettings.url && slackSettings.url !== '') {
+    if (slackSettings && slackSettings.url && slackSettings.url !== '') {
+        slackSettings.username = slackSettings.username ? slackSettings.username : 'Ghost';
         // Only ping when not a page
-        if (post.page) {
+        if (post.type === 'page') {
             return;
         }
 
@@ -66,20 +66,69 @@ function ping(post) {
             return;
         }
 
-        slackData = {
-            text: message,
-            unfurl_links: true,
-            icon_url: blogIconUtils.getIconUrl(true),
-            username: 'Ghost'
-        };
+        if (schema.isPost(post)) {
+            slackData = {
+                // We are handling the case of test notification here by checking
+                // if it is a post or a test message to check webhook working.
+                text: `Notification from *${blogTitle}* :ghost:`,
+                unfurl_links: true,
+                icon_url: imageLib.blogIcon.getIconUrl(true),
+                username: slackSettings.username,
+                // We don't want to send attachment if it is a test notification.
+                attachments: [
+                    {
+                        fallback: 'Sorry, content cannot be shown.',
+                        title: title,
+                        title_link: message,
+                        author_name: blogTitle,
+                        image_url: post ? urlUtils.urlFor('image', {image: post.feature_image}, true) : null,
+                        color: '#008952',
+                        fields: [
+                            {
+                                title: 'Description',
+                                value: description,
+                                short: false
+                            }
+                        ]
+                    },
+                    {
+                        fallback: 'Sorry, content cannot be shown.',
+                        color: '#008952',
+                        thumb_url: author ? urlUtils.urlFor('image', {image: author.profile_image}, true) : null,
+                        fields: [
+                            {
+                                title: 'Author',
+                                value: author ? `<${urlService.getUrlByResourceId(author.id, {absolute: true})} | ${author.name}>` : null,
+                                short: true
+                            }
+                        ],
+                        footer: blogTitle,
+                        footer_icon: imageLib.blogIcon.getIconUrl(true),
+                        ts: moment().unix()
+                    }
+                ]
+            };
+        } else {
+            slackData = {
+                text: message,
+                unfurl_links: true,
+                icon_url: imageLib.blogIcon.getIconUrl(true),
+                username: slackSettings.username
+            };
+        }
 
-        // fill the options for https request
-        reqOptions = url.parse(slackSettings.url);
-        reqOptions.method = 'POST';
-        reqOptions.headers = {'Content-type': 'application/json'};
-
-        // with all the data we have, we're doing the request now
-        makeRequest(reqOptions, slackData);
+        return request(slackSettings.url, {
+            body: JSON.stringify(slackData),
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }).catch(function (err) {
+            common.logging.error(new common.errors.GhostError({
+                err: err,
+                context: common.i18n.t('errors.services.ping.requestFailed.error', {service: 'slack'}),
+                help: common.i18n.t('errors.services.ping.requestFailed.help', {url: 'https://ghost.org/docs/'})
+            }));
+        });
     }
 }
 
@@ -95,7 +144,7 @@ function listener(model, options) {
 
 function testPing() {
     ping({
-        message: 'Heya! This is a test notification from your Ghost blog :simple_smile:. Seems to work fine!'
+        message: 'Heya! This is a test notification from your Ghost blog :smile:. Seems to work fine!'
     });
 }
 

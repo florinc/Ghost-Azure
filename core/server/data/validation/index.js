@@ -5,8 +5,8 @@ var schema = require('../schema').tables,
     assert = require('assert'),
     Promise = require('bluebird'),
     common = require('../../lib/common'),
-    settingsCache = require('../../settings/cache'),
-    urlService = require('../../services/url'),
+    settingsCache = require('../../services/settings/cache'),
+    urlUtils = require('../../lib/url-utils'),
 
     validatePassword,
     validateSchema,
@@ -52,6 +52,7 @@ function characterOccurance(stringToTest) {
 }
 
 // extends has been removed in validator >= 5.0.0, need to monkey-patch it back in
+// @TODO: We modify the global validator dependency here! https://github.com/chriso/validator.js/issues/525#issuecomment-213149570
 validator.extend = function (name, fn) {
     validator[name] = function () {
         var args = Array.prototype.slice.call(arguments);
@@ -94,7 +95,7 @@ validator.extend('isSlug', function isSlug(str) {
 validatePassword = function validatePassword(password, email, blogTitle) {
     var validationResult = {isValid: true},
         disallowedPasswords = ['password', 'ghost', 'passw0rd'],
-        blogUrl = urlService.utils.urlFor('home', true),
+        blogUrl = urlUtils.urlFor('home', true),
         badPasswords = [
             '1234567890',
             'qwertyuiop',
@@ -159,19 +160,40 @@ validatePassword = function validatePassword(password, email, blogTitle) {
     return validationResult;
 };
 
-// Validation against schema attributes
-// values are checked against the validation objects from schema.js
-validateSchema = function validateSchema(tableName, model) {
+/**
+ * Validate model against schema.
+ *
+ * ## on model update
+ * - only validate changed fields
+ * - otherwise we could throw errors which the user is out of control
+ * - e.g.
+ *   - we add a new field without proper validation, release goes out
+ *   - we add proper validation for a single field
+ * - if you call `user.save()` the default fallback in bookshelf is `options.method=update`.
+ * - we set `options.method` explicit for adding resources (because otherwise bookshelf uses `update`)
+ *
+ * ## on model add
+ * - validate everything to catch required fields
+ */
+validateSchema = function validateSchema(tableName, model, options) {
+    options = options || {};
+
     var columns = _.keys(schema[tableName]),
         validationErrors = [];
 
     _.each(columns, function each(columnKey) {
         var message = '',
-            strVal = _.toString(model[columnKey]);
+            strVal = _.toString(model.get(columnKey)); // KEEP: Validator.js only validates strings.
+
+        if (options.method !== 'insert' && !_.has(model.changed, columnKey)) {
+            return;
+        }
 
         // check nullable
-        if (model.hasOwnProperty(columnKey) && schema[tableName][columnKey].hasOwnProperty('nullable')
-            && schema[tableName][columnKey].nullable !== true) {
+        if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'nullable') &&
+            schema[tableName][columnKey].nullable !== true &&
+            !Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'defaultTo')
+        ) {
             if (validator.empty(strVal)) {
                 message = common.i18n.t('notices.data.validation.index.valueCannotBeBlank', {
                     tableName: tableName,
@@ -185,7 +207,7 @@ validateSchema = function validateSchema(tableName, model) {
         }
 
         // validate boolean columns
-        if (model.hasOwnProperty(columnKey) && schema[tableName][columnKey].hasOwnProperty('type')
+        if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'type')
             && schema[tableName][columnKey].type === 'bool') {
             if (!(validator.isBoolean(strVal) || validator.empty(strVal))) {
                 message = common.i18n.t('notices.data.validation.index.valueMustBeBoolean', {
@@ -197,12 +219,17 @@ validateSchema = function validateSchema(tableName, model) {
                     context: tableName + '.' + columnKey
                 }));
             }
+
+            // CASE: ensure we transform 0|1 to false|true
+            if (!validator.empty(strVal)) {
+                model.set(columnKey, !!model.get(columnKey));
+            }
         }
 
         // TODO: check if mandatory values should be enforced
-        if (model[columnKey] !== null && model[columnKey] !== undefined) {
+        if (model.get(columnKey) !== null && model.get(columnKey) !== undefined) {
             // check length
-            if (schema[tableName][columnKey].hasOwnProperty('maxlength')) {
+            if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'maxlength')) {
                 if (!validator.isLength(strVal, 0, schema[tableName][columnKey].maxlength)) {
                     message = common.i18n.t('notices.data.validation.index.valueExceedsMaxLength',
                         {
@@ -218,12 +245,12 @@ validateSchema = function validateSchema(tableName, model) {
             }
 
             // check validations objects
-            if (schema[tableName][columnKey].hasOwnProperty('validations')) {
+            if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'validations')) {
                 validationErrors = validationErrors.concat(validate(strVal, columnKey, schema[tableName][columnKey].validations, tableName));
             }
 
             // check type
-            if (schema[tableName][columnKey].hasOwnProperty('type')) {
+            if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'type')) {
                 if (schema[tableName][columnKey].type === 'integer' && !validator.isInt(strVal)) {
                     message = common.i18n.t('notices.data.validation.index.valueIsNotInteger', {
                         tableName: tableName,
@@ -318,7 +345,8 @@ validate = function validate(value, key, validations, tableName) {
             }
 
             validationErrors.push(new common.errors.ValidationError({
-                message: translation
+                message: translation,
+                context: `${tableName}.${key}`
             }));
         }
 

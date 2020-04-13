@@ -1,47 +1,33 @@
-var debug = require('ghost-ignition').debug('admin:controller'),
-    _ = require('lodash'),
-    path = require('path'),
-    config = require('../../config'),
-    api = require('../../api'),
-    updateCheck = require('../../update-check'),
-    common = require('../../lib/common');
+const debug = require('ghost-ignition').debug('web:admin:controller');
+const path = require('path');
+const config = require('../../config');
+const updateCheck = require('../../update-check');
+const common = require('../../lib/common');
 
-// Route: index
-// Path: /ghost/
-// Method: GET
+/**
+ * @description Admin controller to handle /ghost/ requests.
+ *
+ * Every request to the admin panel will re-trigger the update check service.
+ *
+ * @param req
+ * @param res
+ */
 module.exports = function adminController(req, res) {
     debug('index called');
 
-    updateCheck().then(function then() {
-        return updateCheck.showUpdateNotification();
-    }).then(function then(updateVersion) {
-        if (!updateVersion) {
-            return;
-        }
-
-        var notification = {
-            status: 'alert',
-            type: 'info',
-            location: 'upgrade.new-version-available',
-            dismissible: false,
-            message: common.i18n.t('notices.controllers.newVersionAvailable',
-                {
-                    version: updateVersion,
-                    link: '<a href="https://docs.ghost.org/docs/upgrade" target="_blank">Click here</a>'
-                })
-        };
-
-        return api.notifications.browse({context: {internal: true}}).then(function then(results) {
-            if (!_.some(results.notifications, {message: notification.message})) {
-                return api.notifications.add({notifications: [notification]}, {context: {internal: true}});
-            }
+    // CASE: trigger update check unit and let it run in background, don't block the admin rendering
+    updateCheck()
+        .catch((err) => {
+            common.logging.error(err);
         });
-    }).finally(function noMatterWhat() {
-        var defaultTemplate = config.get('env') === 'production' ? 'default-prod.html' : 'default.html',
-            templatePath = path.resolve(config.get('paths').adminViews, defaultTemplate);
 
-        res.sendFile(templatePath);
-    }).catch(function (err) {
-        common.logging.error(err);
-    });
+    const defaultTemplate = config.get('env') === 'production' ? 'default-prod.html' : 'default.html';
+    const templatePath = path.resolve(config.get('paths').adminViews, defaultTemplate);
+    const headers = {};
+
+    if (config.get('adminFrameProtection')) {
+        headers['X-Frame-Options'] = 'sameorigin';
+    }
+
+    res.sendFile(templatePath, {headers});
 };

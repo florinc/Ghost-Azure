@@ -5,9 +5,9 @@ var _ = require('lodash'),
     os = require('os'),
     glob = require('glob'),
     uuid = require('uuid'),
-    extract = require('extract-zip'),
-    sequence = require('../../utils/sequence'),
-    pipeline = require('../../utils/pipeline'),
+    {extract} = require('@tryghost/zip'),
+    sequence = require('../../lib/promise/sequence'),
+    pipeline = require('../../lib/promise/pipeline'),
     common = require('../../lib/common'),
     ImageHandler = require('./handlers/image'),
     JSONHandler = require('./handlers/json'),
@@ -31,8 +31,8 @@ defaults = {
 function ImportManager() {
     this.importers = [ImageImporter, DataImporter];
     this.handlers = [ImageHandler, JSONHandler, MarkdownHandler];
-    // Keep track of files to cleanup at the end
-    this.filesToDelete = [];
+    // Keep track of file to cleanup at the end
+    this.fileToDelete = null;
 }
 
 /**
@@ -102,22 +102,23 @@ _.extend(ImportManager.prototype, {
      * @returns {Function}
      */
     cleanUp: function () {
-        var filesToDelete = this.filesToDelete;
-        return function (result) {
-            _.each(filesToDelete, function (fileToDelete) {
-                fs.remove(fileToDelete, function (err) {
-                    if (err) {
-                        common.logging.error(new common.errors.GhostError({
-                            err: err,
-                            context: common.i18n.t('errors.data.importer.index.couldNotCleanUpFile.error'),
-                            help: common.i18n.t('errors.data.importer.index.couldNotCleanUpFile.context')
-                        }));
-                    }
-                });
-            });
+        var self = this;
 
-            return result;
-        };
+        if (self.fileToDelete === null) {
+            return;
+        }
+
+        fs.remove(self.fileToDelete, function (err) {
+            if (err) {
+                common.logging.error(new common.errors.GhostError({
+                    err: err,
+                    context: common.i18n.t('errors.data.importer.index.couldNotCleanUpFile.error'),
+                    help: common.i18n.t('errors.data.importer.index.couldNotCleanUpFile.context')
+                }));
+            }
+
+            self.fileToDelete = null;
+        });
     },
     /**
      * Return true if the given file is a Zip
@@ -168,9 +169,10 @@ _.extend(ImportManager.prototype, {
      * @returns {Promise[]} Files
      */
     extractZip: function (filePath) {
-        var tmpDir = path.join(os.tmpdir(), uuid.v4());
-        this.filesToDelete.push(tmpDir);
-        return Promise.promisify(extract)(filePath, {dir: tmpDir}).then(function () {
+        const tmpDir = path.join(os.tmpdir(), uuid.v4());
+        this.fileToDelete = tmpDir;
+
+        return extract(filePath, {dir: tmpDir}).then(function () {
             return tmpDir;
         });
     },
@@ -233,7 +235,7 @@ _.extend(ImportManager.prototype, {
             baseDir = self.getBaseDirectory(zipDirectory);
 
             _.each(self.handlers, function (handler) {
-                if (importData.hasOwnProperty(handler.type)) {
+                if (Object.prototype.hasOwnProperty.call(importData, handler.type)) {
                     // This limitation is here to reduce the complexity of the importer for now
                     return Promise.reject(new common.errors.UnsupportedMediaTypeError({
                         message: common.i18n.t('errors.data.importer.index.zipContainsMultipleDataFormats')
@@ -293,9 +295,6 @@ _.extend(ImportManager.prototype, {
     loadFile: function (file) {
         var self = this,
             ext = path.extname(file.name).toLowerCase();
-
-        this.filesToDelete.push(file.path);
-
         return this.isZip(ext) ? self.processZip(file) : self.processFile(file, ext);
     },
     /**
@@ -327,7 +326,7 @@ _.extend(ImportManager.prototype, {
         importOptions = importOptions || {};
         var ops = [];
         _.each(this.importers, function (importer) {
-            if (importData.hasOwnProperty(importer.type)) {
+            if (Object.prototype.hasOwnProperty.call(importData, importer.type)) {
                 ops.push(function () {
                     return importer.doImport(importData[importer.type], importOptions);
                 });
@@ -354,8 +353,7 @@ _.extend(ImportManager.prototype, {
      * @param {importOptions} importOptions to allow override of certain import features such as locking a user
      * @returns {Promise}
      */
-    importFromFile: function (file, importOptions) {
-        importOptions = importOptions || {};
+    importFromFile: function (file, importOptions = {}) {
         var self = this;
 
         // Step 1: Handle converting the file to usable data
@@ -368,10 +366,8 @@ _.extend(ImportManager.prototype, {
             return self.doImport(importData, importOptions);
         }).then(function (importData) {
             // Step 4: Report on the import
-            return self.generateReport(importData)
-            // Step 5: Cleanup any files
-                .finally(self.cleanUp());
-        });
+            return self.generateReport(importData);
+        }).finally(() => self.cleanUp()); // Step 5: Cleanup any files
     }
 });
 
