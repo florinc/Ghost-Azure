@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{@site.lang}}">
+<head>
+	{{! Document Settings }}
+	<meta charset="utf-8">
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+	{{! Page Meta }}
+	<title>{{meta_title}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- stylesheets -->
+	{{! Styles'n'Scripts }}
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="{{asset "css/bootstrap.min.css"}}">
+	<link rel="stylesheet" href="{{asset "css/font-awesome.min.css"}}">
+	<link rel="stylesheet" href="{{asset "css/hl-styles/atom-one-dark.min.css"}}">
+	<link rel="stylesheet" type="text/css" href="{{asset "css/screen.css"}}">
+	{{! inserting theme config partial}}
+	{{> config}}
+	{{! Ghost outputs important style and meta data with this tag }}
+    {{ghost_head}}
+</head>
+<body class="{{body_class}}">
+	{{! insert header partial}}
+	{{> header}}
+
+	{{! insert topbar partial}}
+	{{> topbar}}
+
+	{{{body}}}
+
+	{{! insert sidebar partial}}
+	{{> sidebar}}
+	{{! insert footer partial}}
+	{{> footer}}

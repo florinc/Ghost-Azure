@@ -1,0 +1,47 @@
+{{!< default}}
+{{! The tag above means - insert everything in this file into the {body} of the default.hbs template }}
+
+<div class="main-content-wrapper">
+	{{! author page cover}}
+	{{#author}}
+	<section class="intro-wrap">
+		<div class="intro intro-tag">
+			<div class="inner-wrap">
+				<div class="avatar-wrap">
+				{{#if profile_image}}
+					<img src="{{profile_image}}" alt="Author image" class="avatar">
+					{{else}}
+					<img src="{{asset "images/default-user-image.jpg"}}" alt="Author image" class="avatar">
+				{{/if}}
+				<a href="{{url}}rss/" class="author-rss"><i class="fa fa-rss"></i></a>
+				</div>
+				<div class="name">{{name}}</div>
+				<div class="meta-info">
+					<span class="post-count"><i class="fa fa-pencil"></i>{{plural ../pagination.total empty=(t "No posts") singular=(t "1 post") plural=(t "% posts")}}</span>
+					{{#if location}}
+					<span class="loaction"><i class="fa fa-home"></i>{{location}}</span>
+					{{/if}}
+					{{#if website}}
+					<span class="website"><i class="fa fa-globe"></i><a href="{{website}}" targer="_BLANK">{{website}}</a></span>
+					{{/if}}
+				</div>
+				<div class="bio">{{bio}}</div>
+			</div>
+		</div>
+	</section>
+	{{/author}}
+	{{! author page cover end}}
+	<section class="main-content clearfix">
+		<div id="item-container">
+			{{! insert loop for each post}}
+			{{> loop}}		
+		</div>
+		<div class="pagination-wrap">
+			{{! Previous/next page links - displayed on every page }}
+			{{pagination}}
+			<a href="" class="page-loader">
+				{{t "Load more post"}}
+			</a>
+		</div>
+	</section>
+</div>

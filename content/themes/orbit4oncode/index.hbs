@@ -1,0 +1,18 @@
+{{!< default}}
+{{! The tag above means - insert everything in this file into the {body} of the default.hbs template }}
+
+<div class="main-content-wrapper">
+	<section class="main-content clearfix">
+		<div id="item-container">
+			{{! insert loop for each post}}
+			{{> loop}}	
+		</div>
+		<div class="pagination-wrap">
+			{{! Previous/next page links - displayed on every page }}
+			{{pagination}}
+			<a href="" class="page-loader">
+				{{t "Load more post"}}
+			</a>
+		</div>
+	</section>
+</div>

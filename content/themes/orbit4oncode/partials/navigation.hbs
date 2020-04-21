@@ -1,0 +1,10 @@
+<!-- menue widget start -->
+<div class="widget">
+	<!-- change the href value below, home need not to change -->
+	<ul class="menu">
+		{{#foreach navigation}}
+		<li class="nav-{{slug}}{{#if current}} nav-current{{/if}}"><a href="{{url absolute="true"}}">{{label}}</a></li>
+		{{/foreach}}
+	</ul>
+</div>
+<!-- menue widget end -->

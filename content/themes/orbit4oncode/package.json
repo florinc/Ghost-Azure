@@ -1,0 +1,42 @@
+{
+  "name": "orbit",
+  "description": "",
+  "demo": "http://orbit.gbjsolution.com",
+  "version": "2.1.1",
+  "engines": {
+    "ghost": ">=2.0.0",
+    "ghost-api": "v2"
+  },
+  "screenshots": {
+    "desktop": "assets/screenshot-desktop.jpg",
+    "mobile": "assets/screenshot-mobile.jpg"
+  },
+  "author": {
+    "name": "GBJ solution",
+    "email": "gbjsolution@gmail.com",
+    "url": "http://gbjsolution.com"
+  },
+  "gpm": {
+    "type": "theme",
+    "categories": [
+      "Minimal",
+      "Personal Blogs",
+      "Magazine Layouts",
+      "Business Blogs",
+      "Masonry Style"
+    ]
+  },
+  "keywords": [
+    "ghost",
+    "theme",
+    "ghost-theme",
+    "magazine",
+    "news",
+    "personal",
+    "minimal"
+  ],
+  "config": {
+    "posts_per_page": 6
+  }
+}
+
