@@ -3,7 +3,7 @@ routes:
   /signin/: signin
   /account/: account
   /signup/free/: signup-free
-  
+
 collections:
   /:
     permalink: /{slug}/

@@ -1,13 +1,9 @@
 {{! Start main header}}
-<header class="header" {{#if @site.cover_image}}style="background-image: url({{@site.cover_image}})"{{/if}}>
+<header class="header" style="background-image: url('./assets/images/cover-left.jpg')">
 	<div class="header-content-wrapper">
 		<!-- start branding -->
 		<div class="branding">
-			{{#if @site.logo}}
-            <a href="{{@site.url}}"><img src="{{@site.logo}}" alt="{{@site.title}}"></a>
-            {{else}}
-            <a href="{{@site.url}}">{{@site.title}}</a>
-            {{/if}}
+            <a href="{{@site.url}}"><img src="./assets/images/OnCodeDesign-logo-header.png" alt="{{@site.title}}"></a>
 		</div>
 		<!-- end branding -->
 		<!-- start intro text -->
@@ -22,6 +18,5 @@
 			{{> copyright}}
 		</div>
 	</div>
-	<i class="fa fa-angle-left toggle-button hidden-sm hidden-xs"></i>
 </header>
 {{! end main header}}
