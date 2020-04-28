@@ -158,7 +158,7 @@
                     }]
                 }
                 fuse = new Fuse(list, options);
-                $('#search-field').on("keyup", function () {
+                $('#search-field').on("keyup", function (e) {
                     keyWord = this.value;
                     var result = fuse.search(keyWord);
                     console.log(result);
@@ -167,9 +167,22 @@
                         output += '<li><a href="' + val.url + '">' + val.title + '</a></li>';
                     });
                     $("#results ul").html(output);
+                    if(this.value.length === 0) {
+                        $("#results ul").html('');
+                    }
+                    if (e.keyCode === 27) {
+                        $("#results").hide();
+                        $('#search-field').blur();
+                    }
                 });
             }
         }
+        $('#search-field').on('focus', function() {
+            $("#results").show();
+        });
+        $('#search-field').on('blur', function() {
+            $("#results").hide();
+        });
     },
     sidebarScrollbar: function () {
         $('.sidebar').niceScroll({
@@ -214,6 +227,59 @@
             return false;
         });
     },
+    notification: function() {
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+        // Give the parameter a variable name
+        var action = getParameterByName('action');
+        var stripe = getParameterByName('stripe');
+        if (action == 'subscribe') {
+            showNotification('notification-subscribe');
+            cleanTheUri();
+        }
+        if (action == 'signup') {
+            window.location = '/signup/?action=checkout';
+        }
+        if (action == 'checkout') {
+            showNotification('notification-signup');
+            cleanTheUri();
+        }
+        if (action == 'signin') {
+            showNotification('notification-signin');
+            cleanTheUri();
+        }
+        if (stripe == 'success') {
+            showNotification('notification-checkout');
+            cleanTheUri();
+        }
+    
+        function showNotification(notificationClass) {
+            var notification = document.querySelector('.'+notificationClass);
+            notification.classList.add('visible');
+            var height = notification.offsetHeight ;
+            document.body.style.marginTop = height + 'px';
+            var closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', function() {
+                notification.classList.remove('visible');
+                document.body.style.marginTop = '0px';
+            })
+        }
+    
+        function cleanTheUri() {
+            var uri = window.location.toString();
+            if (uri.indexOf("?") > 0) {
+                var cleanUri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, cleanUri);
+            }
+        }
+    },
     init: function () {
         themeApp.masonryLayout();
         themeApp.responsiveIframe();
@@ -228,6 +294,7 @@
         themeApp.masonryOnResize();
         themeApp.gallery();
         themeApp.backToTop();
+        themeApp.notification();
     }
 }
 

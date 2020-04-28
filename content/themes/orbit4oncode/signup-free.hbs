@@ -1,0 +1,55 @@
+{{!< default}}
+{{! The tag above means - insert everything in this file into the {body} of the default.hbs template }}
+
+<div class="main-content-wrapper">
+	<section class="main-content clearfix">
+		<div class="outer-wrap post-full">
+			{{! insert loop for each post}}
+			<article class="{{post_class}}">
+                {{#if @member.paid}}
+
+                    {{!-- Logged in, paying member: Redirect home --}}
+                    <script>window.location = '{{@site.url}}/';</script>
+
+                {{else if @member}}
+                    {{!-- Logged in, free member: Redirect signup --}}
+                    <script>window.location = '{{@site.url}}/signup/';</script>
+
+                {{else}}
+				<div class="post-content inner-wrap">
+                    <header>
+                        <h1>{{t "Sign up to free plan"}}</h1>
+                        <p>
+                            {{t "Get access to all free members only content."}}
+                        </p>
+                    </header>
+					<div class="post-excerpt">
+                            <div class="subscription-inner">
+                                <form class="subscribe-form" data-members-form="signup">
+                                    <div class="text-center">
+                                    </div>
+                                    <div class="form-field-wrap field-group-inline">
+                                        <label for="email" class="sr-only">{{t "Email"}}</label>
+                                        <input data-members-email type="email" class="email" id="email" placeholder="{{t "Your email address"}}" required/>
+                                        <button class="btn btn-primary btn-submit" type="submit"><i class="fa fa-circle-o-notch fa-spin loading-icon"></i>{{t "Continue"}}</button>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="alternate-option">
+                                            <small>{{t "Already have an account?"}} <a href="{{@site.url}}/signin/">{{t "Sign in"}}</a></small>
+                                        </div>
+                                        <div class="message-success">
+                                            <strong>{{t "Great!"}}</strong> {{t "Check your inbox and click the link to confirm your subscription"}}
+                                        </div>
+                                        <div class="message-error">
+                                            <strong>{{t "Error!"}}</strong> {{t "Please enter a valid email address!"}}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+					</div>
+				</div>
+                {{/if}}
+			</article>
+		</div>
+	</section>
+</div>

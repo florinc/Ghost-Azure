@@ -1,0 +1,42 @@
+{{!< default}}
+{{! The tag above means - insert everything in this file into the {body} of the default.hbs template }}
+
+<div class="main-content-wrapper">
+	<section class="main-content clearfix">
+		<div class="outer-wrap post-full">
+			{{! insert loop for each post}}
+			<article class="{{post_class}}">
+				<div class="signup-content-wrap">
+					<header class="text-center">
+						<h1 class="subscription-title">{{t "Choose your subscription"}}</h1>
+                        <p class="subscription-description">{{t "Unlock full access and see the entire library of members-only content & updates"}}
+                        </p>
+					</header>
+					<div class="post-excerpt">
+                        {{#if @member.paid}}
+
+                            {{!-- Logged in, paying member: Redirect home --}}
+                            <script>window.location = '{{@site.url}}/';</script>
+
+                        {{else if @member}}
+
+                            {{!-- Logged in, not paying: Check out --}}
+
+                            {{> members/pricing-table}}
+
+                        {{else}}
+                            {{> members/pricing-table}}
+                            <div class="pricing-currency">
+                                <small><sup>*</sup> {{t "All price is in"}} {{@price.currency}}</small>
+                            </div>
+                            <div class="text-center">
+                                <small>{{t "Already have an account?"}} <a href="{{@site.url}}/signin/">{{t "Sign in"}}</a></small>
+                            </div>
+
+                        {{/if}}
+					</div>
+				</div>
+			</article>
+		</div>
+	</section>
+</div>

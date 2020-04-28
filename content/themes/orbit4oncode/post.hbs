@@ -20,18 +20,27 @@
 						<div class="post-meta">{{date format="MMMM DD, YYYY"}}</div>
 					</header>
 					<div class="post-excerpt">
+						{{#if access}}
 						{{content}}
+						{{else}}
+						<div class="post-excerpt">
+							{{excerpt}}
+						</div>
+						{{> members/member-upgrade-cta}}
+						{{/if}}
 					</div>
+					{{#if access}}
 					<div class="tag-list">
 							{{tags separator=""}}
 					</div>
-					<!-- <hr/> -->
 					<footer class="clearfix">
 						{{> share}}
 					</footer>
+					{{/if}}
 				</div>
 			</article>
 		</div>
+		{{#if access}}
 		<div class="outer-wrap">
 			<div class="inner-wrap">
 				{{> about-author}}
@@ -42,6 +51,7 @@
 				{{> comment}}
 			</div>
 		</div>
+		{{/if}}
 		{{/post}}
 	</section>
 </div>

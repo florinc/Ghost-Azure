@@ -1,0 +1,11 @@
+<div class="post-upgrade-cta-box">
+    <div class="text-center">
+        {{#if @member}}
+        <h2 class="title">{{t "This post is for paying subscribers only"}}</h2>
+        {{else}}
+        <h2 class="title">{{t "This post is for subscribers only"}}</h2>
+        {{/if}}
+        <a class="btn btn-primary" href="{{@site.url}}/signup/">{{t "Subscribe now"}}</a>
+        <p class="sign-in-cta"><small>{{t "Already have an account?"}} <a href="{{@site.url}}/signin/">{{t "Sign in"}}</a></small></p>
+    </div>
+</div>

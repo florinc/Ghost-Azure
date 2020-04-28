@@ -1,0 +1,9 @@
+{{!-- <div class="pricing-wrap"> --}}
+    <div class="pricing-table-wrap flex">
+        {{^if @member}}
+        {{> members/pricing-table-free}}
+        {{/if}}
+        {{> members/pricing-table-monthly}}
+        {{> members/pricing-table-yearly}}
+    </div>
+{{!-- </div> --}}

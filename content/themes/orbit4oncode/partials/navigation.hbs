@@ -5,6 +5,23 @@
 		{{#foreach navigation}}
 		<li class="nav-{{slug}}{{#if current}} nav-current{{/if}}"><a href="{{url absolute="true"}}">{{label}}</a></li>
 		{{/foreach}}
+		{{#if @labs.members}}
+        {{#if @member}}
+        <li class="nav-item{{#is "account"}} nav-current{{/is}}">
+            <a href="/account/">{{t "Account"}}</a>
+        </li>
+        <li class="nav-item">
+            <a class="" href="#signout" data-members-signout>{{t "Sign Out"}}</a>
+        </li>
+        {{else}}
+        <li class="nav-item{{#is "signin"}} nav-current{{/is}}">
+            <a href="/signin/">{{t "Log In"}}</a>
+        </li>
+        <li class="nav-item{{#is "signup"}} nav-current{{/is}}">
+            <a href="/signup/">{{t "Sign Up"}}</a>
+        </li>
+        {{/if}}
+        {{/if}}
 	</ul>
 </div>
 <!-- menue widget end -->
