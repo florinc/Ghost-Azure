@@ -111,9 +111,15 @@ blockquote {
   z-index: 2;
   padding: 0 45px;
   color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 15px;
+  padding-left: 15px;
+  text-align: right;
 }
 .header .header-content-wrapper .branding {
-  padding-top: 50px;
+  padding-top: 47px;
   text-align: center;
   font-size: 2.5em;
 }
@@ -127,7 +133,7 @@ blockquote {
   max-width: 100%;
 }
 .header .header-content-wrapper .intro {
-  margin-top: 30px;
+  margin-top: 5px;
   padding-bottom: 90px;
 }
 .header .toggle-button {
@@ -191,6 +197,9 @@ blockquote {
   bottom: 0;
   left: 0;
   padding: 0 30px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .header .header-bottom .social {
   margin-bottom: 5px;
@@ -1441,11 +1450,23 @@ subscription-expiration-warning {
   }
 }
 @media (max-width: 414px) {
+  .header .header-content-wrapper {
+    padding-right: 10px;
+  }
+  .header .header-content-wrapper .branding {
+    padding-top: 40px;
+  }
   .header .header-content-wrapper .intro {
     padding-bottom: 30px;
   }
 }
 @media (max-width: 360px) {
+  .header .header-content-wrapper .branding {
+    width: 90%;
+  }
+  .header .header-content-wrapper .intro {
+    padding-bottom: 25px;
+  }
   .top-bar.push-left {
     right: 250px;
   }
