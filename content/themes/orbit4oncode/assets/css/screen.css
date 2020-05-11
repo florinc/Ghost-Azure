@@ -112,7 +112,7 @@ blockquote {
   color: #FFFFFF;
 }
 .header .header-content-wrapper .branding {
-  padding-top: 90px;
+  padding-top: 50px;
   text-align: center;
   font-size: 2.5em;
 }
@@ -189,10 +189,10 @@ blockquote {
   width: 100%;
   bottom: 0;
   left: 0;
-  padding: 0 30px 15px;
+  padding: 0 30px 5px;
 }
 .header .header-bottom .social {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 .header .header-bottom .social ul {
   padding: 0;
