@@ -1403,6 +1403,7 @@ subscription-expiration-warning {
 }
 @media (max-width: 991px) {
   .header {
+    background-image: url('../images/top-cover-w992.jpg');
     position: relative;
     width: auto;
     height: auto;
