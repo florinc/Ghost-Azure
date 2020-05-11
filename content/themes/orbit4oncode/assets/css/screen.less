@@ -1290,6 +1290,15 @@ subscription-expiration-warning {
 	height: auto;
 	margin-top: 68px;
 	left: 0;
+		.header-content-wrapper {
+			.branding {
+				padding-top: 40px;
+			}
+			.intro {
+				margin-top: 5px;
+				padding-bottom: 130px;
+			}
+		}
 	}
 
 	.main-content-wrapper {
@@ -1318,6 +1327,16 @@ subscription-expiration-warning {
             min-height: 144px;
         }
     }
+}
+
+@media (max-width: 414px) {
+	.header {
+		.header-content-wrapper {
+			.intro {
+				padding-bottom: 30px;
+			}
+		}
+	}
 }
 
 @media (max-width: 360px) {

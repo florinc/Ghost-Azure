@@ -1410,6 +1410,13 @@ subscription-expiration-warning {
     margin-top: 68px;
     left: 0;
   }
+  .header .header-content-wrapper .branding {
+    padding-top: 40px;
+  }
+  .header .header-content-wrapper .intro {
+    margin-top: 5px;
+    padding-bottom: 130px;
+  }
   .main-content-wrapper {
     margin-left: 0;
     margin-top: 0;
@@ -1431,6 +1438,11 @@ subscription-expiration-warning {
   .post-content .kg-bookmark-thumbnail {
     flex-basis: 13em;
     min-height: 144px;
+  }
+}
+@media (max-width: 414px) {
+  .header .header-content-wrapper .intro {
+    padding-bottom: 30px;
   }
 }
 @media (max-width: 360px) {
