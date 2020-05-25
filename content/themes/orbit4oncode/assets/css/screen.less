@@ -44,12 +44,12 @@ blockquote {
 	border-left: 5px solid @theme-color;
 }
 ::-moz-selection {
-    color: @white;
+    color: @pure-white;
     background: @theme-color;
     text-shadow: none;
 }
 ::selection {
-    color: @white;
+    color: @pure-white;
     background: @theme-color;
     text-shadow: none;
 }
@@ -70,7 +70,7 @@ blockquote {
 	overflow: hidden;
 	.transition(all 0.3s ease-in-out);
 	a, a:focus {
-		color: @white;
+		color: @pure-white;
 	}
 	#canvas_wrapper {
 		position: absolute;
@@ -88,8 +88,7 @@ blockquote {
 		top: 0;
 		text-align: center;
 		z-index: 2;
-		padding: 0 45px;
-		color: @white;
+		color: @pure-white;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-end;
@@ -101,7 +100,7 @@ blockquote {
 			text-align: center;
 			font-size: 2.5em;
 			a {
-				color: @white;
+				color: @pure-white;
 				&:hover {
 					text-decoration: none;
 				}
@@ -129,7 +128,7 @@ blockquote {
 		font-size: 24px;
 		line-height: 60px;
 		text-align: center;
-		color: @white;
+		color: @pure-white;
 		cursor: pointer;
 		z-index: 99;
 		.opacity(0.2);
@@ -178,13 +177,13 @@ blockquote {
 							font-size: 0.8em;
 							line-height: 32px;
 							color: @theme-color;
-							background: @white;
+							background: @pure-white;
 							.border-radius(50%);
 							.transition(all .1s ease-in-out);
 						}
 						&:hover {
 							i {
-								color: @white;
+								color: @pure-white;
 								background: @orange;
 							}
 						}
@@ -204,7 +203,7 @@ blockquote {
 	left: 400px;
 	right: 0;
 	top: 0;
-	color: @white;
+	color: @pure-white;
 	.transition(all 0.3s ease-in-out);
 	z-index: 99;
 	&.expanded {
@@ -243,7 +242,7 @@ blockquote {
 		ul {
 			margin: 0;
 			padding: 0;
-			background: @white;
+			background: @pure-white;
 			.box-shadow(0px 0px 4px @bg-color);
 			li {
 				list-style: none;
@@ -255,7 +254,7 @@ blockquote {
 					color: @text-color;
 					&:hover {
 						background: @theme-color;
-						color: @white;
+						color: @pure-white;
 						text-decoration: none;
 					}
 				}
@@ -286,7 +285,7 @@ blockquote {
 }
 .item {
 	margin: 30px 0 0px 30px;
-	background: @white;
+	background: @pure-white;
 	z-index: 1;
 	opacity: 0;
 }
@@ -352,7 +351,7 @@ blockquote {
 					.transition(all 0.3s ease-in-out);
 					&:hover {
 						text-decoration: none;
-						color: @white;
+						color: @pure-white;
 						border: 1px solid @theme-color;
 						background: @theme-color;
 					}
@@ -441,13 +440,13 @@ blockquote {
 .page-loader,  .page-loader:focus {
 	padding: 10px 20px;
 	background: @theme-color;
-	color: @white;
+	color: @pure-white;
 	.border-radius(4px);
 	text-decoration: none;
 	line-height: 42px;
 	&:hover {
 		background: @bg-color;
-		color: @white;
+		color: @pure-white;
 		text-decoration: none;
 	}
 	i {
@@ -461,7 +460,7 @@ blockquote {
 	right: 10px;
 	bottom: 10px;
 	background: fade(@bg-color, 70%);
-	color: @white;
+	color: @pure-white;
 	text-align: center;
 	.border-radius(4px);
 	z-index: 1;
@@ -484,7 +483,7 @@ blockquote {
 		margin: 0 30px;
 		padding: 30px 45px;
 		background: @bg-color;
-		color: @white;
+		color: @pure-white;
 		.border-radius(4px);
 		text-align: center;
 		.tag-name {
@@ -509,7 +508,7 @@ blockquote {
 				position: absolute;
 				left: 50%;
 				bottom: -0px;
-				background: @white;
+				background: @pure-white;
 				color: @text-color;
 				.border-radius(50%);
 				text-align: center;
@@ -563,7 +562,7 @@ blockquote {
 ====================================================*/
 .outer-wrap {
 	margin: 30px;
-	background: @white;
+	background: @pure-white;
 	.border-radius(4px);
 }
 .inner-wrap {
@@ -727,7 +726,7 @@ blockquote {
 				}
 				&:hover {
 					i {
-						color: @white;
+						color: @pure-white;
 					}
 					.fa-facebook {
 						background: #3b5998;
@@ -839,7 +838,7 @@ blockquote {
 }
 .sidebar {
 	height: 100%;
-	color: @white;
+	color: @pure-white;
 	padding: 15px 30px;
 	overflow-y: scroll;
 	a {
@@ -892,7 +891,7 @@ blockquote {
 			.transition(all 0.3s ease-in-out);
 			&:hover {
 				text-decoration: none;
-				color: @white;
+				color: @pure-white;
 				background: @theme-color;
 			}
 		}
@@ -918,7 +917,7 @@ input[type='text'], input[type='email'], input[type='url'], textarea {
 	border: none;
 	&:hover {
 		background: @theme-color;
-		color: @white;
+		color: @pure-white;
 		border: none;
 	}
 	&:focus {
@@ -934,7 +933,7 @@ input[type='text'], input[type='email'], input[type='url'], textarea {
 	}
 }
 #fb {
-	background: @white;
+	background: @pure-white;
 }
 /*=====================================================
 	Subscription
@@ -945,7 +944,7 @@ input[type='text'], input[type='email'], input[type='url'], textarea {
 	border-radius:5px;
 	padding: 4px 16px;
 	display: none;
-	color: @white;
+	color: @pure-white;
 }
 .message-success {
 	background-color: @success;
@@ -1065,7 +1064,7 @@ subscription-expiration-warning {
         }
     }
     .cancel-error {
-        color: @white;
+        color: @pure-white;
         border-radius: 3px;
         padding: 4px 8px;
         margin-top: 2rem;
@@ -1088,7 +1087,7 @@ subscription-expiration-warning {
     width: 100%;
     height: auto;
     background: @success;
-    color: @white;
+    color: @pure-white;
     // margin-bottom: 3rem;
     padding: 1rem 2rem;
     position: fixed;
@@ -1117,7 +1116,7 @@ subscription-expiration-warning {
 				transform: rotate(45deg);
 				display: inline-block;
 				font-size: 30px;
-				color: @white;
+				color: @pure-white;
 			}
             &:hover {
                 opacity: 1;
@@ -1142,9 +1141,9 @@ subscription-expiration-warning {
 	text-align: center;
 	padding: 30px 0;
 	background: @bg-color;
-	color: @white;
+	color: @pure-white;
 	a {
-		color: @white;
+		color: @pure-white;
 	}
 	.social {
 		margin-bottom: 15px;
@@ -1165,13 +1164,13 @@ subscription-expiration-warning {
 						font-size: 0.8em;
 						line-height: 32px;
 						color: @bg-color;
-						background: @white;
+						background: @pure-white;
 						.border-radius(50%);
 						.transition(all .1s ease-in-out);
 					}
 					&:hover {
 						i {
-							color: @white;
+							color: @pure-white;
 							background: @theme-color;
 						}
 					}

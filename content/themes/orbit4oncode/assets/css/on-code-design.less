@@ -1,14 +1,28 @@
+@import "less_parts/variables.less";
+
+
 .header-content-box {
   display: flex;
   flex-direction: row;
-  background-color: #00bb00;
+  padding-top: 60px;
 
 
+  a {
+    white-space: nowrap;
+    color: @theme-color;
+  }
+  a:hover {
+    color: hotpink;
+  }
 }
 
 .header-content-training {
   img {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
+  }
+
+  .header-content-training-links {
+    margin: 10px;
   }
 }

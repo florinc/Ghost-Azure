@@ -1,32 +1,32 @@
 {{! Start main header}}
 <header class="header">
-	<div class="header-content-wrapper">
-		<!-- start branding -->
-		<div class="branding">
+    <div class="header-content-wrapper">
+        <!-- start branding -->
+        <div class="branding">
             <a href="{{@site.url}}"><img src="./assets/images/OnCodeDesign-logo-header.png" alt="{{@site.title}}"></a>
-		</div>
-		<!-- end branding -->
-		<!-- start intro text -->
-		<div class="intro">
-			{{@site.description}}
-		</div>
+        </div>
+        <!-- end branding -->
+        <!-- start intro text -->
+        <div class="intro">
+            {{@site.description}}
+        </div>
 
         <div class="header-content-box header-content-training">
-            <ul>
-                <li><a href="training-code-design/">Code Design Practices</a></li>
-                <li><a href="training-clean-architecture/">Implementing Clean Architecture</a></li>
-                <li><a href="training-unit-testing/">Good Unit Tests</a></li>
-            </ul>
+            <div class="header-content-training-links">
+                <a href="training-code-design/">Code Design Practices</a><br/>
+                <a href="training-clean-architecture/">Implementing Clean Architecture</a><br/>
+                <a href="training-unit-testing/">Good Unit Tests</a><br/>
+            </div>
             <img src="assets/images/training-icon-yellow2.png">
         </div>
 
-		<!-- end intro text -->
-		<div class="header-bottom hidden-sm hidden-xs">
-			{{! insert slocial links}}
-			{{> social_link}}
-			{{! Insert copyright partial}}
-			{{> copyright}}
-		</div>
-	</div>
+        <!-- end intro text -->
+        <div class="header-bottom hidden-sm hidden-xs">
+            {{! insert slocial links}}
+            {{> social_link}}
+            {{! Insert copyright partial}}
+            {{> copyright}}
+        </div>
+    </div>
 </header>
 {{! end main header}}
