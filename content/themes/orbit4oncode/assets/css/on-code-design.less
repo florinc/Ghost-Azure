@@ -1,11 +1,13 @@
 @import "less_parts/variables.less";
 
-
-.header-content-box {
+.header-content {
+  height: 100%;
+  padding-top: 30px;
+  padding-bottom: 300px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
-  padding-top: 50px;
   color: @theme-color;
   white-space: nowrap;
 
@@ -13,17 +15,25 @@
     color: @theme-color;
   }
 
-  .header-more-link {
-    font-size: smaller;
-    color: @white !important;
-  }
+  .header-content-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
 
-  .header-content-training-links {
-    margin: 10px;
-  }
+    .header-more-link {
+      font-size: smaller;
+      color: @white !important;
+    }
 
-  .header-content-about-me {
-    margin: 10px;
-    text-align: left !important;
+    .header-content-training-links {
+      margin: 10px;
+    }
+
+    .header-content-about-me {
+      margin: 10px;
+      text-align: left !important;
+    }
   }
 }

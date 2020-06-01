@@ -1,25 +1,35 @@
 /*====================================================
 	COLOR VARIABLE FOR THEME
 ====================================================*/
-.header-content-box {
+.header-content {
+  height: 100%;
+  padding-top: 30px;
+  padding-bottom: 300px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
-  padding-top: 50px;
   color: #06415F;
   white-space: nowrap;
 }
-.header-content-box a {
+.header-content a {
   color: #06415F;
 }
-.header-content-box .header-more-link {
+.header-content .header-content-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.header-content .header-content-box .header-more-link {
   font-size: smaller;
   color: #F2F2F2 !important;
 }
-.header-content-box .header-content-training-links {
+.header-content .header-content-box .header-content-training-links {
   margin: 10px;
 }
-.header-content-box .header-content-about-me {
+.header-content .header-content-box .header-content-about-me {
   margin: 10px;
   text-align: left !important;
 }
