@@ -4,25 +4,26 @@
 .header-content-box {
   display: flex;
   flex-direction: row;
-  padding-top: 60px;
-
+  align-items: center;
+  padding-top: 50px;
+  color: @theme-color;
+  white-space: nowrap;
 
   a {
-    white-space: nowrap;
     color: @theme-color;
   }
-  a:hover {
-    color: hotpink;
-  }
-}
 
-.header-content-training {
-  img {
-    width: 110px;
-    height: 110px;
+  .header-more-link {
+    font-size: smaller;
+    color: @white !important;
   }
 
   .header-content-training-links {
     margin: 10px;
+  }
+
+  .header-content-about-me {
+    margin: 10px;
+    text-align: left !important;
   }
 }

@@ -4,20 +4,23 @@
 .header-content-box {
   display: flex;
   flex-direction: row;
-  padding-top: 60px;
+  align-items: center;
+  padding-top: 50px;
+  color: #06415F;
+  white-space: nowrap;
 }
 .header-content-box a {
-  white-space: nowrap;
   color: #06415F;
 }
-.header-content-box a:hover {
-  color: hotpink;
+.header-content-box .header-more-link {
+  font-size: smaller;
+  color: #F2F2F2 !important;
 }
-.header-content-training img {
-  width: 110px;
-  height: 110px;
-}
-.header-content-training .header-content-training-links {
+.header-content-box .header-content-training-links {
   margin: 10px;
+}
+.header-content-box .header-content-about-me {
+  margin: 10px;
+  text-align: left !important;
 }
 /*# sourceMappingURL=on-code-design.css.map */
