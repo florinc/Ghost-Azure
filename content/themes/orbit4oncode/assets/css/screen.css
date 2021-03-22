@@ -107,16 +107,14 @@ blockquote {
   width: 100%;
   height: 100%;
   top: 0;
-  text-align: center;
+  text-align: right;
   z-index: 2;
-  padding: 0 45px;
   color: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   padding-right: 15px;
   padding-left: 15px;
-  text-align: right;
 }
 .header .header-content-wrapper .branding {
   padding-top: 47px;
