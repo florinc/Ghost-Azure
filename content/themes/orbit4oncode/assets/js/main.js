@@ -14,21 +14,33 @@
         $items = $('.item');
         conWidth = $('#item-container').width();
         col = 0;
+        colspace = 35;
         if (conWidth > 1600) {
             col = 4;
         }
         else if (conWidth > 1200) {
             col = 3;
+            colspace = 20;
         }
         else if (conWidth > 767) {
+            colspace = 10;
             col = 2;
         }
         else {
+            colspace = 2;
             col = 1;
         }
-        colspace = 30;
+
         var width = Math.floor((conWidth - (colspace * (col + 1))) / col);
         $items.css('width', width);
+
+        if (col === 1) {
+            $items.css('marginLeft', 2);
+            $items.css('marginTop', 25);
+        } else {
+            $items.css('marginLeft', colspace);
+            $items.css('marginTop', colspace);
+        }
     },
     masonryLayout: function () {
         themeApp.setcolumn();
