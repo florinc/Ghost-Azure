@@ -33,4 +33,9 @@
   margin: 10px;
   text-align: left !important;
 }
+@media (max-width: 991px) {
+  .header-content {
+    display: none;
+  }
+}
 /*# sourceMappingURL=on-code-design.css.map */
