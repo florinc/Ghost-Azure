@@ -17,19 +17,30 @@
 }
 .header-content .header-content-box {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   padding-top: 15px;
   padding-bottom: 15px;
 }
-.header-content .header-content-box .header-more-link {
+.header-content .header-content-box .header-content-box-title {
+  align-self: flex-start;
+  font-size: 18px;
+  color: #F2F2F2;
+  margin: 0;
+  text-decoration: underline;
+}
+.header-content .header-content-box .header-content-box-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.header-content .header-content-box .header-content-box-content .header-more-link {
   font-size: smaller;
   color: #F2F2F2 !important;
 }
-.header-content .header-content-box .header-content-training-links {
+.header-content .header-content-box .header-content-box-content .header-content-training-links {
   margin: 10px;
 }
-.header-content .header-content-box .header-content-about-me {
+.header-content .header-content-box .header-content-box-content .header-content-about-me {
   margin: 10px;
   text-align: left !important;
 }

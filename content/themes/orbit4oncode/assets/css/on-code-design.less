@@ -17,23 +17,36 @@
 
   .header-content-box {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
     padding-top: 15px;
     padding-bottom: 15px;
 
-    .header-more-link {
-      font-size: smaller;
-      color: @white !important;
+    .header-content-box-title {
+      align-self: flex-start;
+      font-size: 18px;
+      color: @white;
+      margin: 0;
+      text-decoration: underline;
     }
 
-    .header-content-training-links {
-      margin: 10px;
-    }
+    .header-content-box-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
 
-    .header-content-about-me {
-      margin: 10px;
-      text-align: left !important;
+      .header-more-link {
+        font-size: smaller;
+        color: @white !important;
+      }
+
+      .header-content-training-links {
+        margin: 10px;
+      }
+
+      .header-content-about-me {
+        margin: 10px;
+        text-align: left !important;
+      }
     }
   }
 }
